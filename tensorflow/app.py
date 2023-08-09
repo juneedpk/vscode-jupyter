@@ -33,11 +33,9 @@ with dataset:
     st.bar_chart((df['age'].value_counts()).head(10))
 
 
-with features:
-    st.header('The features I created')
-    st.text('I created these features')
-
-
+##with features:
+    #st.header('The features I created')
+    #st.text('I created these features')
 
 
 with model_training:    
