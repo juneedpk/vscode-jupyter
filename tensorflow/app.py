@@ -3,6 +3,7 @@ import seaborn as sns
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error , mean_squared_error , r2_score
+import plotly.express as px
 
 
 
@@ -12,6 +13,9 @@ header = st.container()
 dataset = st.container()
 features = st.container()
 model_training = st.container()
+
+
+
 
 
 with header:
@@ -25,12 +29,13 @@ with dataset:
     #import data
     df = sns.load_dataset('titanic')
     df = df.dropna()
-    st.write(df.head(10))
+    st.write(df.describe().transpose())
     st.subheader('Passenger Sex distribution')
     st.bar_chart(df['sex'].value_counts())
 
     st.subheader('Passenger Age distribution')
     st.bar_chart((df['age'].value_counts()).head(10))
+
 
 
 ##with features:
@@ -77,3 +82,9 @@ with model_training:
     display.write(r2_score(y,prediction))
 
 
+    age_option = st.selectbox('Select age',options=[10,20,30,40,50,60,70,80,90,100])
+
+
+    st.write(px.scatter(df, x="age", y="fare", color="sex",animation_frame="class",animation_group="who",))
+    st.write(px.bar(df, x="who", y="fare", range_y=[0,1000],color="embark_town",
+             pattern_shape="embark_town", pattern_shape_sequence=[".", "x", "+"]))
