@@ -2,9 +2,14 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image
+import os
+
+
 
 # Load the trained model
-model = tf.keras.models.load_model('vscode-jupyter-1\tensorflow\mnist_cnn.h5')  # Replace 'path_to_your_model' with the actual path
+
+
+model = tf.keras.models.load_model('vscode-jupyter-1\model.h5') 
 
 # Streamlit app
 st.title("MNIST Digit Classification")
@@ -30,13 +35,19 @@ if uploaded_file is not None:
     st.write("Confidence:", prediction[0][predicted_class])
 
 # Additional content (e.g., model summary, training history)
+import matplotlib.pyplot as plt
+
 if st.checkbox("Show Model Summary"):
     st.subheader("Model Summary")
     st.text(model.summary())
 
 if st.checkbox("Show Training History"):
     st.subheader("Training History")
-    st.line_chart(history.history['accuracy'])
-    st.line_chart(history.history['val_accuracy'])
-    st.line_chart(history.history['loss'])
-    st.line_chart(history.history['val_loss'])
+    fig, ax = plt.subplots()
+    ax.plot(model.history['accuracy'], label='Training Accuracy')
+    ax.plot(model.history['val_accuracy'], label='Validation Accuracy')
+    ax.set_xlabel('Epoch')
+    ax.set_ylabel('Accuracy')
+    ax.legend()
+    st.pyplot(fig)
+
