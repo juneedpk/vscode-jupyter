@@ -52,20 +52,4 @@ if st.sidebar.button("Predict"):
     species = predict_species(height, weight, eye_color)
     st.write(f"Predicted Species: {species}")
 
-# Optionally, you can add some explanation or information about the model
-st.write("""
-### Model Information
-This app uses a pre-trained Logistic Regression model to predict the species based on height, weight, and eye color.
-""")
 
-# Optionally, you can add some information about the dataset or a link to the source.
-st.write("""
-### Dataset Information
-The dataset used for training this model can be found [here](https://raw.githubusercontent.com/gerchristko/Streamlit-ML-App/main/data.csv).
-""")
-
-# Optionally, you can add some information about the app and its purpose.
-st.write("""
-### About
-This Streamlit app is for educational purposes and demonstrates how to deploy a machine learning model using Streamlit.
-""")
