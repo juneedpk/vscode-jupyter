@@ -1,60 +1,71 @@
 import streamlit as st
-import cv2
-import tempfile
-import os
+from transformers import T5ForConditionalGeneration, T5Tokenizer
+import requests
 
-st.title("Parking Space Detection")
+# Load pre-trained T5 model and tokenizer
+model = T5ForConditionalGeneration.from_pretrained('t5-small')
+tokenizer = T5Tokenizer.from_pretrained('t5-small')
 
-# Select camera or uploaded video
-source = st.sidebar.selectbox("Select source", ["Upload Video", "Webcam"])
+# Define a function to generate commands for Story Blocks
+def generate_command(footage_description, resolution):
+	input_text = f"Download {footage_description} in {resolution}"
+	input_ids = tokenizer.encode(input_text, return_tensors='pt')
+	generated_command = model.generate(input_ids=input_ids, max_length=50)
+	return generated_command.decode('utf-8')
 
-cap = None
+# Define a function to download footage from Story Blocks
+def download_footage(footage_id, resolution):
+	api_url = f"(link unavailable)"
+	response = requests.get(api_url, auth=('YOUR_API_KEY', 'YOUR_API_SECRET'))
+	if response.status_code == 200:
+		return response.content
+	else:
+		return None
 
-if source == "Webcam":
-    try:
-        # Use webcam
-        cap = cv2.VideoCapture(0)
-        if not cap.isOpened():
-            st.sidebar.error("Could not open video device")
-    except Exception as e:
-        st.sidebar.error(f"Error accessing webcam: {e}")
-elif source == "Upload Video":
-    # Upload video file
-    uploaded_file = st.sidebar.file_uploader("Upload video file (MP4)", type=["mp4"])
-    if uploaded_file is not None:
-        # Create a temporary directory
-        temp_dir = tempfile.mkdtemp()
-        # Save the uploaded file to the temporary directory
-        temp_file_path = os.path.join(temp_dir, "uploaded_video.mp4")
-        with open(temp_file_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-        # Read the uploaded video
-        cap = cv2.VideoCapture(temp_file_path)
-        if not cap.isOpened():
-            st.sidebar.error("Could not open uploaded video file. Please check if the file format is correct.")
+# Define a function to generate scripts for Eleven Labs
+def generate_script(scene_description, characters):
+	input_text = f"Create a script for {scene_description} with characters: {characters}"
+	input_ids = tokenizer.encode(input_text, return_tensors='pt')
+	generated_script = model.generate(input_ids=input_ids, max_length=200)
+	return generated_script.decode('utf-8')
 
-if cap is not None:
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            st.warning("Unable to read frame. Please make sure the video source is accessible.")
-            break
-        else:
-            # Convert the frame from OpenCV's BGR format to RGB format
-            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            # Resize the frame to fit the window
-            frame_resized = cv2.resize(frame_rgb, (640, 480))
-            # Display the frame
-            st.image(frame_resized, caption="Live", use_column_width=True)
-            
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+# Define a function to upload script to Eleven Labs
+def upload_script(script, project_id):
+	api_url = f"(link unavailable)"
+	response = requests.post(api_url, auth=('YOUR_API_KEY', 'YOUR_API_SECRET'), json={'script': script, 'project_id': project_id})
+	if response.status_code == 201:
+		return True
+	else:
+		return False
 
-    # Release the video capture object and close OpenCV windows
-    cap.release()
+# Create a Streamlit app
+st.title("AI Assistant for Story Blocks and Eleven Labs")
 
-    cv2.destroyAllWindows()
+# Story Blocks section
+st.write("Download Footage from Story Blocks:")
+footage_description = st.text_input("Footage Description")
+resolution = st.selectbox("Resolution", ["HD", "4K"])
+if st.button("Download Footage"):
+	command = generate_command(footage_description, resolution)
+	footage_id = command.split(' ')[1]
+	downloaded_footage = download_footage(footage_id, resolution)
+	if downloaded_footage:
+		st.write("Download successful!")
+		st.image(downloaded_footage)
+	else:
+		st.write("Failed to download footage.")
 
+# Eleven Labs section
+st.write("Generate Script for Eleven Labs:")
+scene_description = st.text_input("Scene Description")
+characters = st.text_input("Characters (comma-separated)")
+if st.button("Generate Script"):
+	script = generate_script(scene_description, characters)
+	project_id = "YOUR_PROJECT_ID"  # Replace with your project ID
+	if upload_script(script, project_id):
+		st.write("Script uploaded successfully!")
+	else:
+		st.write("Failed to upload script.")
 
 
 
