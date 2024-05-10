@@ -14,8 +14,8 @@ def index():
     # Perform basic EDA
     eda_plots = []
 
-    # Pairplot
-    pairplot = sns.pairplot(iris, hue='species', diag_kind='kde')
+    # Pairplot without using 'species' as hue
+    pairplot = sns.pairplot(iris, diag_kind='kde')
     plt.title('Pairplot')
     plt.tight_layout()
     pairplot_img = io.BytesIO()
@@ -38,7 +38,3 @@ def index():
     plt.close()
 
     return render_template('index.html', eda_plots=eda_plots)
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
