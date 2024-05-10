@@ -3,13 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDA Plots</title>
+    <title>AI Image Generation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Exploratory Data Analysis (EDA) Plots</h1>
-    <h2>Pairplot</h2>
-    <img src="data:image/png;base64,{{ eda_plots[0] }}" alt="Pairplot" width="80%">
-    <h2>Correlation Heatmap</h2>
-    <img src="data:image/png;base64,{{ eda_plots[1] }}" alt="Correlation Heatmap" width="80%">
+    <div class="container">
+        <h1>AI Image Generation</h1>
+        <form action="/generate" method="post">
+            <label for="prompt">Enter a positive prompt:</label><br>
+            <input type="text" id="prompt" name="prompt"><br><br>
+            <label for="negative_prompt">Enter a negative prompt (optional):</label><br>
+            <input type="text" id="negative_prompt" name="negative_prompt"><br><br>
+            <label for="num_steps">Number of Steps (default 50):</label><br>
+            <input type="number" id="num_steps" name="num_steps" value="50"><br><br>
+            <input type="submit" value="Generate Image">
+        </form>
+    </div>
 </body>
 </html>
+
+
+

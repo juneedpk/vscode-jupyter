@@ -1,52 +1,47 @@
-from flask import Flask, render_template
-import seaborn as sns
-import matplotlib.pyplot as plt
-import pandas as pd
-import io
+from flask import Flask, render_template, request
+import requests
 import base64
 
 app = Flask(__name__)
 
+API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
+HEADERS = {"Authorization": "Bearer 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"}
+
+def query(payload):
+    response = requests.post(API_URL, headers=HEADERS, json=payload)
+    return response.content
+
 @app.route('/')
 def index():
-    # Load example dataset from seaborn
-    iris = sns.load_dataset('iris')
+    return render_template('index.html')
 
-    # Drop non-numeric columns
-    numeric_columns = iris.select_dtypes(include=[float, int]).columns
-    iris_numeric = iris[numeric_columns]
+@app.route('/generate', methods=['POST'])
+def generate():
+    prompt = request.form['prompt']
+    negative_prompt = request.form.get('negative_prompt')
+    num_steps = int(request.form.get('num_steps', 50))  # Default to 50 steps if not provided
 
-    # Perform basic EDA
-    eda_plots = []
+    # Construct the prompt based on positive and negative prompts
+    if negative_prompt:
+        prompt = f"not {negative_prompt} and {prompt}"
+    else:
+        prompt = f"not ugly and {prompt}"  # Default negative prompt if not provided
 
-    # Pairplot without using 'species' as hue
-    pairplot = sns.pairplot(iris_numeric, diag_kind='kde')
-    plt.title('Pairplot')
-    plt.tight_layout()
-    pairplot_img = io.BytesIO()
-    plt.savefig(pairplot_img, format='png')
-    pairplot_img.seek(0)
-    pairplot_base64 = base64.b64encode(pairplot_img.getvalue()).decode()
-    eda_plots.append(pairplot_base64)
-    plt.close()
+    # Query the Hugging Face API with the specified number of steps
+    response_content = query({
+        "inputs": prompt,
+        "num_return_sequences": 1,
+        "num_samples": 1,
+        "num_steps": num_steps
+    })
 
-    # Correlation heatmap
-    corr = iris_numeric.corr()
-    plt.figure(figsize=(8, 6))
-    sns.heatmap(corr, annot=True, cmap='coolwarm')
-    plt.title('Correlation Heatmap')
-    corr_img = io.BytesIO()
-    plt.savefig(corr_img, format='png')
-    corr_img.seek(0)
-    corr_base64 = base64.b64encode(corr_img.getvalue()).decode()
-    eda_plots.append(corr_base64)
-    plt.close()
+    # Convert response content to base64
+    image_base64 = base64.b64encode(response_content).decode('utf-8')
 
-    return render_template('index.html', eda_plots=eda_plots)
+    return render_template('result.html', image_base64=image_base64)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
-
 
 
 
