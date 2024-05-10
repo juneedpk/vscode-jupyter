@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seaborn EDA App</title>
+    <title>EDA Plots</title>
 </head>
 <body>
-    <h1>Seaborn EDA App</h1>
-    {% for plot in eda_plots %}
-        <img src="data:image/png;base64,{{ plot }}" alt="EDA Plot">
-        <br><br>
-    {% endfor %}
+    <h1>Exploratory Data Analysis (EDA) Plots</h1>
+    <h2>Pairplot</h2>
+    <img src="data:image/png;base64,{{ eda_plots[0] }}" alt="Pairplot" width="80%">
+    <h2>Correlation Heatmap</h2>
+    <img src="data:image/png;base64,{{ eda_plots[1] }}" alt="Correlation Heatmap" width="80%">
 </body>
 </html>
