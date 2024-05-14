@@ -25,13 +25,13 @@ def generate():
     if negative_prompt:
         prompt = f"not {negative_prompt} and {prompt}"
     else:
-        prompt = f"not ugly and {prompt}"  # Default negative prompt if not provided
+        prompt = f"not ugly and deformed and {prompt}"  # Default negative prompt if not provided
 
     # Query the Hugging Face API with the specified number of steps
     response_content = query({
         "inputs": prompt,
-        "num_return_sequences": 1,
-        "num_samples": 1,
+        "num_return_sequences": 3,
+        "num_samples": 3,
         "num_steps": num_steps
     })
 
@@ -42,6 +42,7 @@ def generate():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
 
 
 

@@ -1,26 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Image Generation</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        html {
+            font-family: sans-serif;
+        }
+
+        .container-1 {
+            background: transparent;
+            backdrop-filter: blur(40px);
+            border: 1px solid black;
+            padding: 20px;
+            margin: auto;
+            width: 90%; /* Adjust width for better responsiveness */
+            max-width: 500px; /* Limit maximum width */
+        }
+
+        input {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid black;
+            width: 100%; /* Full width input fields */
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container-1 {
+                width: 95%; /* Slightly wider in small devices */
+                margin-top: 20px; /* Less margin on top for small devices */
+            }
+
+            input[type="submit"] {
+                width: 100%; /* Button width to 100% for small screens */
+            }
+        }
+    </style>
 </head>
-<body>
-    <div class="container">
-        <h1>AI Image Generation</h1>
-        <form action="/generate" method="post">
-            <label for="prompt">Enter a positive prompt:</label><br>
-            <input type="text" id="prompt" name="prompt"><br><br>
-            <label for="negative_prompt">Enter a negative prompt (optional):</label><br>
-            <input type="text" id="negative_prompt" name="negative_prompt"><br><br>
-            <label for="num_steps">Number of Steps (default 50):</label><br>
-            <input type="number" id="num_steps" name="num_steps" value="50"><br><br>
-            <input type="submit" value="Generate Image">
+
+<body
+    style="background-image: url('https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=pexels-pixabay-531880.jpg&fm=jpg'); background-size: cover;">
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <form class="container-1" action="/generate" method="post">
+            <h1>AI Image Generation</h1>
+            <div>
+                <label for="prompt">Enter a positive prompt:</label><br>
+                <input type="text" id="prompt" name="prompt"><br>
+                <label for="negative_prompt">Enter a negative prompt (optional):</label><br>
+                <input type="text" id="negative_prompt" name="negative_prompt"><br>
+                <label for="num_steps">Number of Steps (default 50):</label><br>
+                <input type="number" id="num_steps" name="num_steps" value="50"><br><br>
+                <input type="submit" class="btn btn-secondary" value="Generate Image">
+            </div>
         </form>
     </div>
 </body>
+
 </html>
-
-
-
