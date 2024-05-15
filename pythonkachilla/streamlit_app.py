@@ -27,7 +27,7 @@ if uploaded_file is not None:
     test_image = image.img_to_array(test_image)
     test_image = np.expand_dims(test_image, axis = 0)
     from keras.models import load_model
-    model = load_model('paddy.h5')
+    model = load_model('model.h5')
     result = model.predict(test_image)
     if result[0][0] == 1:
         prediction = 'Brown Spot'
