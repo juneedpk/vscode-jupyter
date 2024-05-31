@@ -4,3 +4,4 @@ projects/rice_disease_classification/test_images/200001.jpg
 web_scrapping/classification_model.h5
 web_scrapping/rice.h5
 ts-forecaster/ts_forecaster.ipynb
+web_scrapping/all_tickers_models_scalers.pkl
