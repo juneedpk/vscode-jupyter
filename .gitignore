@@ -5,3 +5,8 @@ web_scrapping/classification_model.h5
 web_scrapping/rice.h5
 ts-forecaster/ts_forecaster.ipynb
 web_scrapping/all_tickers_models_scalers.pkl
+web_scrapping/keras_model.h5
+web_scrapping/stock_app.py
+stock_test.ipynb
+web_scrapping/Chart_patterns_and_technical_indicators.ipynb
+web_scrapping/timesfm_stock_price.ipynb
